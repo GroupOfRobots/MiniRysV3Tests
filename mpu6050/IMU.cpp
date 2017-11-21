@@ -34,8 +34,8 @@ void IMU::initialize() {
 	// setRate accepts factor that works like this: 1kHz / (1 + x); 4 = 200Hz
 	this->mpu->setRate(4);
 
-	this->mpu->setDLPFMode(MPU6050_DLPF_BW_188);
-	this->mpu->setDHPFMode(MPU6050_DHPF_2P5);
+	// this->mpu->setDLPFMode(MPU6050_DLPF_BW_188);
+	// this->mpu->setDHPFMode(MPU6050_DHPF_2P5);
 
 	// make sure it worked (returns 0 if so)
 	if (devStatus == 0) {
@@ -96,15 +96,14 @@ int IMU::getData(ImuData * data) {
 	gravity[1] = 2 * (qw * qx + qy * qz);
 	gravity[2] = qw * qw - qx * qx - qy * qy + qz * qz;
 
-	double roll = -asin(2.0 * qx * qz - 2.0 * qw * qy);
-
 	// Get acceleration, subtract gravity (so we get linear acceleration) and scale it to m/s
 	int16_t rawAcceleration[3];
 	this->mpu->dmpGetAccel(rawAcceleration, rawDataBuffer);
 	for (int i = 0; i < 3; ++i) {
 		// Raw data is in +-2g range with +-32k values - change that into m/s ((a / 16384 - g) * 9.81)
 		/// TODO: if needed, rotate acceleration vector by quaternion BEFORE subtracting gravity
-		data->linearAcceleration[i] = (static_cast<double>(rawAcceleration[i]) / 16384.0 - gravity[i]) * 9.81;
+		// data->linearAcceleration[i] = (static_cast<double>(rawAcceleration[i]) / 16384.0 - gravity[i]) * 9.81;
+		data->linearAcceleration[i] = (static_cast<double>(rawAcceleration[i]) / 16384.0 - gravity[i]);
 	}
 
 	// Get angular velocity from raw data and scale it
@@ -114,6 +113,10 @@ int IMU::getData(ImuData * data) {
 		// Raw data is in +-2000deg/s range with +-32k values - change into rad/s ((r / 16.384) * M_PI/180)
 		data->angularVelocity[i] = static_cast<double>(angularVelocity[i]) * 0.0010652644360316954;
 	}
+
+	double sinr = +2.0 * (qw * qx + qy * qz);
+	double cosr = +1.0 - 2.0 * (qx * qx + qy * qy);
+	double roll = atan2(sinr, cosr) * 180.0 / M_PI;
 
 	std::cout << roll << std::endl;
 

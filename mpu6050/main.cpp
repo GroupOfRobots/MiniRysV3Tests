@@ -13,23 +13,20 @@ void sigintHandler(int signum) {
 int main(int argc, char * argv[]) {
 	signal(SIGINT, sigintHandler);
 
+	std::cout << "initializing imu\n";
 	IMU * imu = new IMU();
+	imu->initialize();
+
+	std::cout << "reading\n";
 
 	while(!exitFlag) {
 		IMU::ImuData data;
-		// int result;
 		try {
 			imu->getData(&data);
 		} catch (std::string & error) {
 			std::cout << "[IMU] Error getting IMU reading: " << error << std::endl;
 			continue;
 		}
-
-		// if (result < 0) {
-		// 	continue;
-		// }
-
-		// std::cout << std::endl;
 	}
 
 	delete imu;
