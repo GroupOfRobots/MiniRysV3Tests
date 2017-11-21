@@ -31,11 +31,6 @@ void IMU::initialize() {
 
 	// load and configure the DMP
 	uint8_t devStatus = this->mpu->dmpInitialize();
-	// setRate accepts factor that works like this: 1kHz / (1 + x); 4 = 200Hz
-	// this->mpu->setRate(4);
-
-	// this->mpu->setDLPFMode(MPU6050_DLPF_BW_188);
-	// this->mpu->setDHPFMode(MPU6050_DHPF_2P5);
 
 	// make sure it worked (returns 0 if so)
 	if (devStatus == 0) {
@@ -65,7 +60,6 @@ int IMU::fetchData(uint8_t * buffer) {
 	}
 
 	this->mpu->getFIFOBytes(buffer, this->packetSize);
-	this->mpu->resetFIFO();
 	return 1;
 }
 
