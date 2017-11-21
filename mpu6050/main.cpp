@@ -27,6 +27,8 @@ int main(int argc, char * argv[]) {
 			std::cout << "[IMU] Error getting IMU reading: " << error << std::endl;
 			continue;
 		}
+
+		usleep(1000);
 	}
 
 	delete imu;

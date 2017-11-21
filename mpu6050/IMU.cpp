@@ -32,7 +32,7 @@ void IMU::initialize() {
 	// load and configure the DMP
 	uint8_t devStatus = this->mpu->dmpInitialize();
 	// setRate accepts factor that works like this: 1kHz / (1 + x); 4 = 200Hz
-	this->mpu->setRate(4);
+	// this->mpu->setRate(4);
 
 	// this->mpu->setDLPFMode(MPU6050_DLPF_BW_188);
 	// this->mpu->setDHPFMode(MPU6050_DHPF_2P5);
@@ -114,9 +114,7 @@ int IMU::getData(ImuData * data) {
 		data->angularVelocity[i] = static_cast<double>(angularVelocity[i]) * 0.0010652644360316954;
 	}
 
-	double sinr = +2.0 * (qw * qx + qy * qz);
-	double cosr = +1.0 - 2.0 * (qx * qx + qy * qy);
-	double roll = atan2(sinr, cosr) * 180.0 / M_PI;
+	double roll = atan2(2.0 * (qw * qx + qy * qz), 1.0 - 2.0 * (qx * qx + qy * qy)) * 180.0 / M_PI;
 
 	std::cout << roll << std::endl;
 
