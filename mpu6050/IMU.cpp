@@ -1,6 +1,7 @@
 #include "IMU.hpp"
 #include <chrono>
 #include <iostream>
+#include <iomanip>
 #include <string>
 #include <thread>
 
@@ -59,8 +60,18 @@ int IMU::fetchData(uint8_t * buffer) {
 		return -1;
 	}
 
-	this->mpu->getFIFOBytes(buffer, this->packetSize);
-	return 1;
+	// If there's too much data in FIFO
+	if (fifoCount > 512) {
+		this->mpu->resetFIFO();
+		return -2;
+	}
+
+	while (fifoCount >= this->packetSize) {
+		this->mpu->getFIFOBytes(buffer, this->packetSize);
+		fifoCount -= this->packetSize;
+	}
+
+	return this->packetSize;
 }
 
 int IMU::getData(ImuData * data) {
@@ -96,8 +107,7 @@ int IMU::getData(ImuData * data) {
 	for (int i = 0; i < 3; ++i) {
 		// Raw data is in +-2g range with +-32k values - change that into m/s ((a / 16384 - g) * 9.81)
 		/// TODO: if needed, rotate acceleration vector by quaternion BEFORE subtracting gravity
-		// data->linearAcceleration[i] = (static_cast<double>(rawAcceleration[i]) / 16384.0 - gravity[i]) * 9.81;
-		data->linearAcceleration[i] = (static_cast<double>(rawAcceleration[i]) / 16384.0 - gravity[i]);
+		data->linearAcceleration[i] = (static_cast<double>(rawAcceleration[i]) / 16384.0 - gravity[i]) * 9.81;
 	}
 
 	// Get angular velocity from raw data and scale it
@@ -108,9 +118,9 @@ int IMU::getData(ImuData * data) {
 		data->angularVelocity[i] = static_cast<double>(angularVelocity[i]) * 0.0010652644360316954;
 	}
 
-	double roll = atan2(2.0 * (qw * qx + qy * qz), 1.0 - 2.0 * (qx * qx + qy * qy)) * 180.0 / M_PI;
-
-	std::cout << roll << std::endl;
+	std::cout << std::fixed << std::setprecision(3) << std::setw(6);
+	std::cout << "G:" << gravity[0] << " " << gravity[1] << " " << gravity[2];
+	std::cout << "| A:" << data->linearAcceleration[0] << " " << data->linearAcceleration[1] << " " << data->linearAcceleration[2] << std::endl;
 
 	return 1;
 }
