@@ -107,7 +107,7 @@ int IMU::getData(ImuData * data) {
 	for (int i = 0; i < 3; ++i) {
 		// Raw data is in +-2g range with +-32k values - change that into m/s ((a / 16384 - g) * 9.81)
 		/// TODO: if needed, rotate acceleration vector by quaternion BEFORE subtracting gravity
-		data->linearAcceleration[i] = (static_cast<double>(rawAcceleration[i]) / 16384.0 - gravity[i]) * 9.81;
+		data->linearAcceleration[i] = (static_cast<double>(rawAcceleration[i])/8192 - gravity[i]) * 9.81;
 	}
 
 	// Get angular velocity from raw data and scale it
