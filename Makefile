@@ -12,7 +12,7 @@ bin/mpu6050: ${MPU6050_OBJS}
 	g++ ${CFLAGS} -c $< -o $@
 
 clean:
-	rm -rf MPU6050_OBJS
-	rm -rf mpu6050
+	rm -rf ${MPU6050_OBJS}
+	rm -rf bin/mpu6050
 
 .PHONY: all clean
