@@ -28,7 +28,7 @@ int main(int argc, char * argv[]) {
 			continue;
 		}
 
-		usleep(1000);
+		usleep(10000);
 	}
 
 	delete imu;

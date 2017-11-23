@@ -86,7 +86,7 @@ int IMU::getData(ImuData * data) {
 	int16_t orientationQuaternion[4];
 	this->mpu->dmpGetQuaternion(orientationQuaternion, rawDataBuffer);
 	for (int i = 0; i < 4; ++i) {
-		// Raw data is in +-32k range with +-2.0 values
+		// Raw data is in +-16k range with +-1.0 values
 		data->orientationQuaternion[i] = static_cast<double>(orientationQuaternion[i]) / 16384.0;
 	}
 
@@ -105,22 +105,25 @@ int IMU::getData(ImuData * data) {
 	int16_t rawAcceleration[3];
 	this->mpu->dmpGetAccel(rawAcceleration, rawDataBuffer);
 	for (int i = 0; i < 3; ++i) {
-		// Raw data is in +-2g range with +-32k values - change that into m/s ((a / 16384 - g) * 9.81)
+		// Raw data is in +-2g range with +-16k values - change that into m/s ((a / 8192 - g) * 9.81)
 		/// TODO: if needed, rotate acceleration vector by quaternion BEFORE subtracting gravity
-		data->linearAcceleration[i] = (static_cast<double>(rawAcceleration[i])/8192 - gravity[i]) * 9.81;
+		data->linearAcceleration[i] = (static_cast<double>(rawAcceleration[i]) / 8192.0 - gravity[i]) * 9.81;
 	}
 
 	// Get angular velocity from raw data and scale it
 	int16_t angularVelocity[3];
 	this->mpu->dmpGetGyro(angularVelocity, rawDataBuffer);
 	for (int i = 0; i < 3; ++i) {
-		// Raw data is in +-2000deg/s range with +-32k values - change into rad/s ((r / 16.384) * M_PI/180)
-		data->angularVelocity[i] = static_cast<double>(angularVelocity[i]) * 0.0010652644360316954;
+		// Raw data is in +-2000deg/s range with +-16k values - change into rad/s ((r / 8.192) * M_PI/180)
+		// data->angularVelocity[i] = static_cast<double>(angularVelocity[i]) * 0.0010652644360316954;
+		data->angularVelocity[i] = static_cast<double>(angularVelocity[i]) / 8.192;
 	}
 
 	std::cout << std::fixed << std::setprecision(3) << std::setw(6);
-	std::cout << "G:" << gravity[0] << " " << gravity[1] << " " << gravity[2];
-	std::cout << "| A:" << data->linearAcceleration[0] << " " << data->linearAcceleration[1] << " " << data->linearAcceleration[2] << std::endl;
+	// std::cout << "| G:" << gravity[0] << " " << gravity[1] << " " << gravity[2];
+	// std::cout << "| A:" << data->linearAcceleration[0] << " " << data->linearAcceleration[1] << " " << data->linearAcceleration[2];
+	std::cout << "| R:" << data->angularVelocity[0] << " " << data->angularVelocity[1] << " " << data->angularVelocity[2];
+	std::cout << std::endl;
 
 	return 1;
 }
