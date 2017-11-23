@@ -1,4 +1,4 @@
-CFLAGS := -Wall -Werror
+CFLAGS := -Wall -Wextra
 
 MPU6050_SRCS := mpu6050/I2Cdev.o mpu6050/IMU.o mpu6050/MPU6050.o mpu6050/main.o
 MPU6050_OBJS := ${MPU6050_SRCS:.cpp=.o}
