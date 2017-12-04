@@ -41,7 +41,7 @@ void imuThreadFn() {
 
 	imu->setXAccelOffset(-offsets[0]/4);
 	imu->setYAccelOffset(-offsets[1]/4);
-	imu->setZAccelOffset((16384-offsets[2])/4);
+	imu->setZAccelOffset(16384-offsets[2]/4);
 	imu->setXGyroOffset(-offsets[3]/4);
 	imu->setYGyroOffset(-offsets[4]/4);
 	imu->setZGyroOffset(-offsets[5]/4);
@@ -90,9 +90,15 @@ int main(int argc, char * argv[]) {
 	std::cout << "[ENTER] to start gathering data\n";
 	std::thread imuThread(imuThreadFn);
 	std::cin.get();
+	if (exitFlag) {
+		return 0;
+	}
 	accumulateDataFlag = true;
 	std::cout << "[ENTER] to stop gathering data\n";
 	std::cin.get();
+	if (exitFlag) {
+		return 0;
+	}
 	accumulateDataFlag = false;
 	exitFlag = true;
 	imuThread.join();
