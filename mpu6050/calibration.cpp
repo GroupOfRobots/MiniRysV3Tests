@@ -6,13 +6,13 @@
 
 bool exitFlag = false;
 bool accumulateDataFlag = false;
-int64_t axs = 0;
-int64_t ays = 0;
-int64_t azs = 0;
-int64_t gxs = 0;
-int64_t gys = 0;
-int64_t gzs = 0;
-uint32_t samples = 0;
+double axs = 0;
+double ays = 0;
+double azs = 0;
+double gxs = 0;
+double gys = 0;
+double gzs = 0;
+double samples = 0;
 
 void sigintHandler(int signum) {
 	if (signum == SIGINT) {
@@ -27,6 +27,12 @@ void imuThreadFn() {
 	if (!imu->testConnection()) {
 		throw(std::string("MPU6050 connection failed"));
 	}
+	imu->setXAccelOffset(0);
+	imu->setYAccelOffset(0);
+	imu->setZAccelOffset(0);
+	imu->setXGyroOffset(0);
+	imu->setYGyroOffset(0);
+	imu->setZGyroOffset(0);
 
 	std::cout << "reading\n";
 
@@ -63,15 +69,15 @@ void imuThreadFn() {
 int main(int argc, char * argv[]) {
 	signal(SIGINT, sigintHandler);
 
-	std::cout << "[ENTER] to start gathering data";
+	std::cout << "[ENTER] to start gathering data\n";
 	std::thread imuThread(imuThreadFn);
 	std::cin.get();
-	std::cout << "[ENTER] to stop gathering data";
+	std::cout << "[ENTER] to stop gathering data\n";
 	std::cin.get();
 	exitFlag = true;
 	imuThread.join();
 
-	std::cout << "Average reads:\n";
+	std::cout << "Average reads in " << samples << " samples:\n";
 	std::cout << "Acceleration:\n";
 	std::cout << "\tAX: " << axs/samples << " | AY: " << ays/samples << " | AZ: " << azs/samples << std::endl;
 	std::cout << "Rotation (gyro):\n";
