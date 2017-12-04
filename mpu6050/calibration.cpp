@@ -33,6 +33,12 @@ void imuThreadFn() {
 		throw(std::string("MPU6050 connection failed"));
 	}
 
+	std::cout << "Setting offsets:";
+	for (int i = 0; i < 6; ++i) {
+		std::cout << " " << offsets[i];
+	}
+	std::cout << std::endl;
+
 	imu->setXAccelOffset(-offsets[0]/4);
 	imu->setYAccelOffset(-offsets[1]/4);
 	imu->setZAccelOffset((16384-offsets[2])/4);
