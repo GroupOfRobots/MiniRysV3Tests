@@ -48,11 +48,19 @@ void imuThreadFn() {
 
 	std::cout << "reading\n";
 
-	int16_t data[6];
+	int32_t data[6];
+	int16_t ax, ay, az, gx, gy, gz;
 
 	while(!exitFlag) {
 		try {
-			imu->getMotion6(&data[0], &data[1], &data[2], &data[3], &data[4], &data[5]);
+			// imu->getMotion6(&data[0], &data[1], &data[2], &data[3], &data[4], &data[5]);
+			imu->getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
+			data[0] = ax;
+			data[1] = ay;
+			data[2] = az;
+			data[3] = gx;
+			data[4] = gy;
+			data[5] = gz;
 		} catch (std::exception & e) {
 			std::cout << "[IMU] Error getting IMU reading: " << e.what() << std::endl;
 			usleep(50 * 1000);
