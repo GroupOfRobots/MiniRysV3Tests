@@ -33,18 +33,21 @@ void imuThreadFn() {
 		throw(std::string("MPU6050 connection failed"));
 	}
 
+	imu->setFullScaleAccelRange(MPU6050_ACCEL_FS_16);
+	imu->setFullScaleGyroRange(MPU6050_GYRO_FS_2000);
+
 	std::cout << "Setting offsets:";
 	for (int i = 0; i < 6; ++i) {
 		std::cout << " " << offsets[i];
 	}
 	std::cout << std::endl;
 
-	imu->setXAccelOffset(-offsets[0]/4);
-	imu->setYAccelOffset(-offsets[1]/4);
-	imu->setZAccelOffset(16384-offsets[2]/4);
-	imu->setXGyroOffset(-offsets[3]/4);
-	imu->setYGyroOffset(-offsets[4]/4);
-	imu->setZGyroOffset(-offsets[5]/4);
+	imu->setXAccelOffset(-offsets[0]);
+	imu->setYAccelOffset(-offsets[1]);
+	imu->setZAccelOffset(-offsets[2] + 2048);
+	imu->setXGyroOffset(-offsets[3]);
+	imu->setYGyroOffset(-offsets[4]);
+	imu->setZGyroOffset(-offsets[5]);
 
 	std::cout << "reading\n";
 
@@ -91,12 +94,14 @@ int main(int argc, char * argv[]) {
 	std::thread imuThread(imuThreadFn);
 	std::cin.get();
 	if (exitFlag) {
+		imuThread.join();
 		return 0;
 	}
 	accumulateDataFlag = true;
 	std::cout << "[ENTER] to stop gathering data\n";
 	std::cin.get();
 	if (exitFlag) {
+		imuThread.join();
 		return 0;
 	}
 	accumulateDataFlag = false;
@@ -109,9 +114,13 @@ int main(int argc, char * argv[]) {
 	std::cout << "Rotation (gyro):\n";
 	std::cout << "\tGX: " << sums[3]/samples << " | GY: " << sums[4]/samples << " | GZ: " << sums[5]/samples << std::endl;
 
-	std::cout << "1line:\n";
+	std::cout << "Averages:\n";
 	for (int i = 0; i < 6; ++i) {
 		std::cout << static_cast<int>(sums[i]/samples) << " ";
+	}
+	std::cout << "\navg+offset:\n";
+	for (int i = 0; i < 6; ++i) {
+		std::cout << static_cast<int>(sums[i]/samples) + offsets[i] + (i == 2 ? -2048 : 0) << " ";
 	}
 	std::cout << std::endl;
 
