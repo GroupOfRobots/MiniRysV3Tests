@@ -72,8 +72,10 @@ int main(int argc, char * argv[]) {
 	std::cout << "[ENTER] to start gathering data\n";
 	std::thread imuThread(imuThreadFn);
 	std::cin.get();
+	accumulateDataFlag = true;
 	std::cout << "[ENTER] to stop gathering data\n";
 	std::cin.get();
+	accumulateDataFlag = false;
 	exitFlag = true;
 	imuThread.join();
 
