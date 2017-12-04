@@ -97,8 +97,7 @@ int main(int argc, char * argv[]) {
 
 	std::cout << "1line:\n";
 	for (int i = 0; i < 6; ++i) {
-		sums[i] += (sums[i] >= 0 ? 0.5 : -0.5);
-		std::cout << static_cast<int>(sums[i]) << " ";
+		std::cout << static_cast<int>(sums[i]/samples) << " ";
 	}
 	std::cout << std::endl;
 
