@@ -14,16 +14,21 @@ void sigintHandler(int signum) {
 int main(int argc, char * argv[]) {
 	signal(SIGINT, sigintHandler);
 
-	std::cout << "[MOTORS] Initializing motors...\n";
+	std::cout << "[MOTORS] Initializing motors..." << std::endl;
 	MotorsController * motorsController = new MotorsController();
-	motorsController->disableMotors();
+	std::cout << "[MOTORS] Enabling motors..." << std::endl;
+	motorsController->enableMotors();
+	std::cout << "[MOTORS] Running..." << std::endl;
 
 	while(!exitFlag) {
 
-		usleep(50 * 1000);
+		motorsController->setMotorSpeeds(0, 0, 1, true);
+		std::cout << motorsController->getMotorSpeedRightRaw() << std::endl;
+		usleep(200 * 1000);
 
 	}
 
+	std::coud "\n[MOTORS] Deleting MotorsController and exiting..." << std::endl;
 	delete motorsController;
 	return 0;
 
