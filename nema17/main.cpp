@@ -1,4 +1,5 @@
 #include <iostream>
+#include <unistd.h>
 #include <csignal>
 #include "MotorsController.hpp"
 
@@ -14,8 +15,8 @@ int main(int argc, char * argv[]) {
 	signal(SIGINT, sigintHandler);
 
 	std::cout << "[MOTORS] Initializing motors...\n";
-	MotorsController * motorController = new MotorsController();
-	motorController->disableMotors()
+	MotorsController * motorsController = new MotorsController();
+	motorsController->disableMotors();
 
 	while(!exitFlag) {
 
