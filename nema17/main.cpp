@@ -24,9 +24,11 @@ int main(int argc, char * argv[]) {
 	motorsController->enableMotors();
 	std::cout << "[MOTORS] Running..." << std::endl;
 
+	float speed = static_cast<float>(*argv[1]);
+
 	while(!exitFlag) {
 
-		motorsController->setMotorSpeeds(0, argv[1], 1, true);
+		motorsController->setMotorSpeeds(0, speed, 1, true);
 		std::cout << motorsController->getMotorSpeedRightRaw() << std::endl;
 		usleep(200 * 1000);
 
