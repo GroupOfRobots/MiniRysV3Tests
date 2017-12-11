@@ -12,6 +12,10 @@ void sigintHandler(int signum) {
 }
 
 int main(int argc, char * argv[]) {
+	if (argc < 2) {
+		std::cout << "[ERROR] Please set right motor speed with argument. Aborting..." << std::endl;
+		return 0;
+	}
 	signal(SIGINT, sigintHandler);
 
 	std::cout << "[MOTORS] Initializing motors..." << std::endl;
@@ -22,13 +26,13 @@ int main(int argc, char * argv[]) {
 
 	while(!exitFlag) {
 
-		motorsController->setMotorSpeeds(0, 0, 1, true);
+		motorsController->setMotorSpeeds(0, argv[1], 1, true);
 		std::cout << motorsController->getMotorSpeedRightRaw() << std::endl;
 		usleep(200 * 1000);
 
 	}
 
-	std::coud "\n[MOTORS] Deleting MotorsController and exiting..." << std::endl;
+	std::cout << "\n[MOTORS] Deleting MotorsController and exiting..." << std::endl;
 	delete motorsController;
 	return 0;
 
