@@ -12,8 +12,8 @@ void sigintHandler(int signum) {
 }
 
 int main(int argc, char * argv[]) {
-	if (argc < 2) {
-		std::cout << "[ERROR] Please set right motor speed with argument. Aborting..." << std::endl;
+	if (argc < 3) {
+		std::cout << "[ERROR] Please pass enough arguments -> (speed, step). Aborting..." << std::endl;
 		return 0;
 	}
 	signal(SIGINT, sigintHandler);
@@ -25,10 +25,11 @@ int main(int argc, char * argv[]) {
 	std::cout << "[MOTORS] Running..." << std::endl;
 
 	float speed = atof(argv[1]);
+	int step = atoi(argv[2]);
 
 	while(!exitFlag) {
 
-		motorsController->setMotorSpeeds(0, speed, 1, true);
+		motorsController->setMotorSpeeds(0.01f, speed, step, true);
 		std::cout << motorsController->getMotorSpeedRightRaw() << std::endl;
 		usleep(200 * 1000);
 
