@@ -24,7 +24,7 @@ int main(int argc, char * argv[]) {
 	motorsController->enableMotors();
 	std::cout << "[MOTORS] Running..." << std::endl;
 
-	float speed = static_cast<float>(*argv[1]);
+	float speed = atof(argv[1]);
 
 	while(!exitFlag) {
 
