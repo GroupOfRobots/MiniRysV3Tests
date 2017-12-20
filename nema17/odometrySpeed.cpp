@@ -31,6 +31,7 @@ int main(int argc, char * argv[]) {
 
 	std::cout << "[ODOM] Initializing motors..." << std::endl;
 	MotorsController * motorsController = new MotorsController();
+	motorsController->setInverting(true, false);
 	std::cout << "[ODOM] Enabling motors..." << std::endl;
 	motorsController->enableMotors();
 	std::cout << "[ODOM] Running..." << std::endl;
