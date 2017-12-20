@@ -15,17 +15,18 @@ void sigintHandler(int signum) {
 }
 
 int main(int argc, char * argv[]) {
-	if (argc < 4) {
+	if (argc < 6) {
 		std::cerr << "Not enough arguments. Usage:" << std::endl;
-		std::cerr << "\t" << argv[0] << " <time> <wheelRadius> <baseWidth>" << std::endl;
+		std::cerr << "\t" << argv[0] << " <time> <microstep> <speed> <wheelRadius> <baseWidth>" << std::endl;
 		return 1;
 	}
 
 	const float time = atof(argv[1]);
-	const float wheelRadius = atof(argv[2]);
-	const float baseWidth = atof(argv[3]);
-	const float speed = 0.05f;
-	const unsigned int microstep = 32;
+	const int microstep = atoi(argv[2]);
+	const float speed = atof(argv[3]);
+	const float wheelRadius = atof(argv[4]);
+	const float baseWidth = atof(argv[5]);
+	// const float speed = 0.05f;
 
 	signal(SIGINT, sigintHandler);
 
@@ -87,11 +88,11 @@ int main(int argc, char * argv[]) {
 	motorsController->disableMotors();
 	delete motorsController;
 
-	std::cout << "Time elapsed:\n\t" << timeElapsed << std::endl;
-	std::cout << "Current position:\n\t" << currentOdometryFrame.p.x() << "\n\t" << currentOdometryFrame.p.y() << std::endl;
+	std::cout << "Time elapsed:\n\tT: " << timeElapsed << std::endl;
+	std::cout << "Current position:\n\tX: " << currentOdometryFrame.p.x() << "\n\tY: " << currentOdometryFrame.p.y() << std::endl;
 	double roll, pitch, yaw;
 	currentOdometryFrame.M.GetRPY(roll, pitch, yaw);
-	std::cout << "Current heading:\n\t" << yaw << std::endl;
+	std::cout << "Current heading:\n\tYaw: " << yaw << std::endl;
 
 	return 0;
 }
