@@ -39,6 +39,7 @@ int main(int argc, char * argv[]) {
 
 	auto startTime = std::chrono::high_resolution_clock::now();
 	auto previousTimestamp = startTime;
+	float timeElapsed = 0.0f;
 
 	while(!exitFlag) {
 		// Save current speeds in units suitable for odometry (m/s)
@@ -72,6 +73,12 @@ int main(int argc, char * argv[]) {
 		// Third, update the odometry frame and put it into the message
 		currentOdometryFrame = currentOdometryFrame * odometryUpdateFrame;
 
+		auto totalTimeSpan = std::chrono::duration_cast<std::chrono::duration<float>>(now - startTime);
+		timeElapsed = totalTimeSpan.count();
+		if (timeElapsed > time) {
+			exitFlag = true;
+			break;
+		}
 		usleep(10 * 1000);
 	}
 
@@ -79,6 +86,7 @@ int main(int argc, char * argv[]) {
 	motorsController->disableMotors();
 	delete motorsController;
 
+	std::cout << "Time elapsed:\n\t" << timeElapsed << std::endl;
 	std::cout << "Current position:\n\t" << currentOdometryFrame.p.x() << "\n\t" << currentOdometryFrame.p.y() << std::endl;
 	double roll, pitch, yaw;
 	currentOdometryFrame.M.GetRPY(roll, pitch, yaw);
