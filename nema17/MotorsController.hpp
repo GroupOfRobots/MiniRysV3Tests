@@ -19,6 +19,7 @@
 #define MAX_MOTOR_SPEED 400000.0f
 #define PRU_CLOCK 200.0f * 1000.0f * 1000.0f
 #define STEPPER_STEPS_PER_REVOLUTION 200.0f
+#define SPEED_MULTIPLIER 0.5f
 #define DEVICE_NAME "/dev/rpmsg_pru31"
 
 class MotorsController {

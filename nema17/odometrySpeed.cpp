@@ -44,9 +44,11 @@ int main(int argc, char * argv[]) {
 	float timeElapsed = 0.0f;
 
 	while(!exitFlag) {
+		float rawSpeed = motorsController->getMotorSpeedLeftRaw();
 		// Save current speeds in units suitable for odometry (m/s)
 		float leftSpeed = motorsController->getMotorSpeedLeft() * wheelRadius * 2 * M_PI;
 		float rightSpeed = motorsController->getMotorSpeedRight() * wheelRadius * 2 * M_PI;
+		std::cout << "raw: " << rawSpeed << " sps " << rawSpeed * PRU_CLOCK / MAX_MOTOR_SPEED << "rps" << motorsController->getMotorSpeedLeft() << std::endl;
 
 		motorsController->setMotorSpeeds(speed, speed, microstep, true);
 
