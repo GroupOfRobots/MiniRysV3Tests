@@ -10,7 +10,7 @@ LIBS_DIRS := ~/ros2/install/lib
 CFLAGS := -Wall -Wextra -I ${INCLUDE_DIRS}
 LFLAGS := -Wall -Wextra -L ${LIBS_DIRS}
 
-all: bin/mpu6050 bin/calibration bin/nema17 bin/odometrySpeed
+all: bin/mpu6050 bin/calibration bin/nema17 bin/odometrySpeed bin/odometryRotation
 
 bin/mpu6050: ${MPU6050_OBJS} mpu6050/main.o
 	g++ ${LFLAGS} ${MPU6050_OBJS} mpu6050/main.o -o bin/mpu6050
@@ -23,6 +23,9 @@ bin/nema17: ${NEMA17_OBJS} nema17/main.o
 
 bin/odometrySpeed: ${NEMA17_OBJS} nema17/odometrySpeed.o
 	g++ ${LFLAGS} ${NEMA17_OBJS} nema17/odometrySpeed.o -lorocos-kdl -o bin/odometrySpeed
+
+bin/odometryRotation: ${NEMA17_OBJS} nema17/odometryRotation.o
+	g++ ${LFLAGS} ${NEMA17_OBJS} nema17/odometryRotation.o -lorocos-kdl -o bin/odometryRotation
 
 %.o: %.cpp %.hpp
 	g++ ${CFLAGS} -c $< -o $@
