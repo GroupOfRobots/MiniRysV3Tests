@@ -45,8 +45,8 @@ int main(int argc, char * argv[]) {
 
 	while(!exitFlag) {
 		// Save current speeds in units suitable for odometry (m/s)
-		float leftSpeed = motorsController->getMotorSpeedLeft() * wheelRadius;
-		float rightSpeed = motorsController->getMotorSpeedRight() * wheelRadius;
+		float leftSpeed = motorsController->getMotorSpeedLeft() * wheelRadius * 2 * M_PI;
+		float rightSpeed = motorsController->getMotorSpeedRight() * wheelRadius * 2 * M_PI;
 
 		motorsController->setMotorSpeeds(speed, speed, microstep, true);
 
