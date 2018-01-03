@@ -38,7 +38,7 @@ int main(int argc, char * argv[]) {
 	motorsController->enableMotors();
 	std::cout << "[ODOM] Running..." << std::endl;
 
-	KDL::Frame currentOdometryFrame(KDL::Rotation::RotZ(M_PI/2));
+	KDL::Frame currentOdometryFrame;
 
 	auto startTime = std::chrono::high_resolution_clock::now();
 	auto previousTimestamp = startTime;
