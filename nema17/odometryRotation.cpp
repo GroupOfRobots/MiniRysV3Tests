@@ -32,7 +32,8 @@ int main(int argc, char * argv[]) {
 
 	std::cout << "[ODOM] Initializing motors..." << std::endl;
 	MotorsController * motorsController = new MotorsController();
-	motorsController->setInverting(true, false);
+	motorsController->setInvertSpeed(true, false);
+	motorsController->setMotorsSwapped(true);
 	std::cout << "[ODOM] Enabling motors..." << std::endl;
 	motorsController->enableMotors();
 	std::cout << "[ODOM] Running..." << std::endl;
@@ -43,7 +44,7 @@ int main(int argc, char * argv[]) {
 	auto previousTimestamp = startTime;
 	float timeElapsed = 0.0f;
 
-	while(!exitFlag) {
+	while (!exitFlag) {
 		// Save current speeds in units suitable for odometry (m/s)
 		float leftSpeed = motorsController->getMotorSpeedLeft() * wheelRadius * 2 * M_PI;
 		float rightSpeed = motorsController->getMotorSpeedRight() * wheelRadius * 2 * M_PI;
@@ -58,17 +59,15 @@ int main(int argc, char * argv[]) {
 		KDL::Frame odometryUpdateFrame;
 		if (leftSpeed == rightSpeed) {
 			// Only linear movement
-			odometryUpdateFrame = KDL::Frame(KDL::Vector(leftSpeed * loopTime, 0, 0));
+			odometryUpdateFrame = KDL::Frame(KDL::Vector(0, leftSpeed * loopTime, 0));
 		} else {
 			float linearVelocity = (rightSpeed + leftSpeed) / 2;
 			float angularVelocity = (rightSpeed - leftSpeed) / baseWidth;
 			float rotationPointDistance = linearVelocity / angularVelocity;
 			float rotationAngle = angularVelocity * loopTime;
 			// Mobile robots traditionally are Y-forward-oriented
-			float deltaX = rotationPointDistance * std::sin(rotationAngle);
-			float deltaY = rotationPointDistance * (1.0 - std::cos(rotationAngle));
-			// float deltaX = rotationPointDistance * (std::cos(rotationAngle) - 1.0);
-			// float deltaY = rotationPointDistance * std::sin(rotationAngle);
+			float deltaX = rotationPointDistance * (1.0 - std::cos(rotationAngle));
+			float deltaY = rotationPointDistance * std::sin(rotationAngle);
 			odometryUpdateFrame = KDL::Frame(KDL::Rotation::RotZ(rotationAngle), KDL::Vector(deltaX, deltaY, 0));
 		}
 
