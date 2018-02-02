@@ -23,6 +23,7 @@ int main(int argc, char * argv[]) {
 	std::cout << "[MOTORS] Enabling motors..." << std::endl;
 	motorsController->enableMotors();
 	motorsController->setInvertSpeed(true, false);
+	motorsController->setMotorsSwapped(true);
 	std::cout << "[MOTORS] Running..." << std::endl;
 
 	float speed = atof(argv[1]);
