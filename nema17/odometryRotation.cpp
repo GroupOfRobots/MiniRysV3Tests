@@ -48,7 +48,7 @@ int main(int argc, char * argv[]) {
 		float leftSpeed = motorsController->getMotorSpeedLeft() * wheelRadius * 2 * M_PI;
 		float rightSpeed = motorsController->getMotorSpeedRight() * wheelRadius * 2 * M_PI;
 
-		motorsController->setMotorSpeeds(speed, -speed, microstep, false);
+		motorsController->setMotorSpeeds(-speed, speed, microstep, false);
 
 		auto now = std::chrono::high_resolution_clock::now();
 		auto loopTimeSpan = std::chrono::duration_cast<std::chrono::duration<float>>(now - previousTimestamp);
@@ -93,7 +93,9 @@ int main(int argc, char * argv[]) {
 	std::cout << "Current position:\n\tX: " << currentOdometryFrame.p.x() << "\n\tY: " << currentOdometryFrame.p.y() << std::endl;
 	double roll, pitch, yaw;
 	currentOdometryFrame.M.GetRPY(roll, pitch, yaw);
-	std::cout << "Current heading:\n\tYaw: " << yaw << std::endl;
+	double yawDegree = yaw / M_PI * 180.0;
+	std::cout << "Current heading:\n\tYaw: " << yaw << " = "<< yawDegree << std::endl;
+	//std::cout << "Current heading:\n\tYaw: " << yaw << std::endl;
 
 	return 0;
 }

@@ -13,7 +13,7 @@
 #define RAD_TO_DEG 57.295779f
 #define SPEED_TO_DEG 1200.0f
 
-#define MAX_ACCELERATION 0.01f
+#define MAX_ACCELERATION 1.0f
 // Note: MAX_MOTOR_SPEED is in fact the MINIMUM delay (in PRU ticks) between steps, so to increase the real max speed decrease this constant.
 /// TODO: Move this delay/PRU_CLOCK/etc logic into PRU driver and make this controller operate on rev/s.
 #define MAX_MOTOR_SPEED 400000.0f
@@ -74,10 +74,13 @@ class MotorsController {
 		std::mutex fileAccessMutex;
 
 		void writePRUDataFrame(const MotorsController::DataFrame & frame);
+
+		void calculateSpeedsPID(float angle, float rotationX, float speed, float throttle, float rotation, float &speedLeftNew, float &speedRightNew, float loopTime);
+		void calculateSpeedsLQR(float angle, float rotationX, float speed, float throttle, float rotation, float &speedLeftNew, float &speedRightNew, float loopTime);
 	public:
 		MotorsController();
 		~MotorsController();
-		void init();
+
 		void setInvertSpeed(const bool left, const bool right);
 		void setMotorsSwapped(const bool motorsSwapped);
 		void setBalancing(bool value);
@@ -91,14 +94,11 @@ class MotorsController {
 		float getSpeedFilterFactor();
 		float getAngleFilterFactor();
 		bool getLQREnabled();
-		float getPIDAngularVelocityFactor();
 		bool getPIDSpeedRegulatorEnabled();
 		void getPIDParameters(float & speedKp, float & speedKi, float & speedKd, float & angleKp, float & angleKi, float & angleKd);
 		void getLQRParameters(float & linearVelocityK, float & angularVelocityK, float & angleK);
 
 		void calculateSpeeds(float angle, float rotationX, float speed, float throttle, float rotation, float &speedLeftNew, float &speedRightNew, float loopTime);
-		void calculateSpeedsPID(float angle, float rotationX, float speed, float throttle, float rotation, float &speedLeftNew, float &speedRightNew, float loopTime);
-		void calculateSpeedsLQR(float angle, float rotationX, float speed, float throttle, float rotation, float &speedLeftNew, float &speedRightNew, float loopTime);
 
 		void enableMotors();
 		void disableMotors();
