@@ -21,6 +21,9 @@ bin/calibration: ${MPU6050_OBJS} mpu6050/calibration.o
 bin/nema17: ${NEMA17_OBJS} nema17/main.o
 	g++ ${LFLAGS} ${NEMA17_OBJS} nema17/main.o -o bin/nema17
 
+bin/acceleration: ${NEMA17_OBJS} nema17/acceleration.o
+	g++ ${LFLAGS} ${NEMA17_OBJS} nema17/acceleration.o -o bin/acceleration
+
 bin/odometrySpeed: ${NEMA17_OBJS} nema17/odometrySpeed.o
 	g++ ${LFLAGS} ${NEMA17_OBJS} nema17/odometrySpeed.o -lorocos-kdl -o bin/odometrySpeed
 
