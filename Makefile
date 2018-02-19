@@ -10,7 +10,7 @@ LIBS_DIRS := ~/ros2/install/lib
 CFLAGS := -Wall -Wextra -I ${INCLUDE_DIRS}
 LFLAGS := -Wall -Wextra -L ${LIBS_DIRS}
 
-all: bin/mpu6050 bin/calibration bin/nema17 bin/odometrySpeed bin/odometryRotation
+all: bin/mpu6050 bin/calibration bin/nema17 bin/acceleration bin/odometrySpeed bin/odometryRotation
 
 bin/mpu6050: ${MPU6050_OBJS} mpu6050/main.o
 	g++ ${LFLAGS} ${MPU6050_OBJS} mpu6050/main.o -o bin/mpu6050
