@@ -277,7 +277,7 @@ void MotorsController::setMotorSpeeds(float speedLeft, float speedRight, int mic
 
 	if (this->motorsSwapped) {
 		float tmp = speedLeft;
-		speedLeft = speedRight
+		speedLeft = speedRight;
 		speedRight = tmp;
 	}
 
