@@ -13,7 +13,7 @@
 #define RAD_TO_DEG 57.295779f
 #define SPEED_TO_DEG 1200.0f
 
-#define MAX_ACCELERATION 1.0f
+#define MAX_ACCELERATION 0.5f
 // Note: MAX_MOTOR_SPEED is in fact the MINIMUM delay (in PRU ticks) between steps, so to increase the real max speed decrease this constant.
 /// TODO: Move this delay/PRU_CLOCK/etc logic into PRU driver and make this controller operate on rev/s.
 #define MAX_MOTOR_SPEED 400000.0f

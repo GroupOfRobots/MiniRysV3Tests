@@ -24,8 +24,8 @@ int main(int argc, char * argv[]) {
 
 	while(!exitFlag) {
 
-		motorsController->setMotorSpeeds(1.0, 1.0, 32, true);
-		std::cout << motorsController->getMotorSpeedLeftRaw() << ';' << motorsController->getMotorSpeedRightRaw() << std::endl;
+		motorsController->setMotorSpeeds(1.0, 1.0, 32, false);
+		std::cout << motorsController->getMotorSpeedLeft() << ';' << motorsController->getMotorSpeedRight() << std::endl;
 		usleep(200 * 1000);
 
 	}
