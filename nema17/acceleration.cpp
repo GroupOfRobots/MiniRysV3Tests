@@ -3,6 +3,8 @@
 #include <csignal>
 #include "MotorsController.hpp"
 
+#define SLEEPY_TIME 10000
+
 bool exitFlag = false;
 
 void sigintHandler(int signum) {
@@ -14,6 +16,11 @@ void sigintHandler(int signum) {
 int main(int argc, char * argv[]) {
 	signal(SIGINT, sigintHandler);
 
+	float speed_mod = 1.0;
+	if (argc > 1 and argv[1] == std::string("-r")) {
+		speed_mod = -1.0;
+	}
+
 	std::cout << "[MOTORS] Initializing motors..." << std::endl;
 	MotorsController * motorsController = new MotorsController();
 	std::cout << "[MOTORS] Enabling motors..." << std::endl;
@@ -24,9 +31,9 @@ int main(int argc, char * argv[]) {
 
 	while(!exitFlag) {
 
-		motorsController->setMotorSpeeds(1.0, 1.0, 32, false);
+		motorsController->setMotorSpeeds(speed_mod*1.0, speed_mod*1.0, 32, false);
 		std::cout << motorsController->getMotorSpeedLeft() << ';' << motorsController->getMotorSpeedRight() << std::endl;
-		usleep(200 * 1000);
+		usleep(SLEEPY_TIME);
 
 	}
 
