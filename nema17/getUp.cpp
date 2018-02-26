@@ -31,19 +31,20 @@ int main(int argc, char * argv[]) {
 
 	while(!exitFlag) {
 
-		for(int i=0; i<20 and !exitFlag; i++)
+		for(int i=0; i<30 and !exitFlag; i++)
 		{
 			motorsController->setMotorSpeeds(speed_mod*1.0, speed_mod*1.0, 32, false);
 			std::cout << motorsController->getMotorSpeedLeft() << ';' << motorsController->getMotorSpeedRight() << std::endl;
 			usleep(SLEEPY_TIME);
 		}
-		for(int i=0; i<10 and !exitFlag; i++)
+		for(int i=0; i<15 and !exitFlag; i++)
 		{
-			motorsController->setMotorSpeeds(speed_mod*0.0, speed_mod*0.0, 32, false);
+			motorsController->setMotorSpeeds(speed_mod*(-1.0), speed_mod*(-1.0), 32, false);
 			std::cout << motorsController->getMotorSpeedLeft() << ';' << motorsController->getMotorSpeedRight() << std::endl;
 			usleep(SLEEPY_TIME);
 		}
 		speed_mod = -speed_mod;
+		usleep(SLEEPY_TIME*200)
 
 	}
 
