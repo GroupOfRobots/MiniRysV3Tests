@@ -44,7 +44,7 @@ int main(int argc, char * argv[]) {
 			usleep(SLEEPY_TIME);
 		}
 		speed_mod = -speed_mod;
-		usleep(SLEEPY_TIME*200)
+		usleep(SLEEPY_TIME*200);
 
 	}
 
