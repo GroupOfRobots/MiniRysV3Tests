@@ -3,7 +3,7 @@
 #include <csignal>
 #include "MotorsController.hpp"
 
-#define SLEEPY_TIME 10000
+#define SLEEPY_TIME 20000
 
 bool exitFlag = false;
 
@@ -31,7 +31,7 @@ int main(int argc, char * argv[]) {
 
 	while(!exitFlag) {
 
-		for(int i=0; i<30 and !exitFlag; i++)
+		for(int i=0; i<12 and !exitFlag; i++)
 		{
 			motorsController->setMotorSpeeds(speed_mod*1.0, speed_mod*1.0, 32, false);
 			std::cout << motorsController->getMotorSpeedLeft() << ';' << motorsController->getMotorSpeedRight() << std::endl;
