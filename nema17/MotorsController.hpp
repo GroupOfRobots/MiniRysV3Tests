@@ -11,9 +11,9 @@
 #define ANGLE_MAX 15
 #define DEG_TO_RAD 0.017453f
 #define RAD_TO_DEG 57.295779f
-#define SPEED_TO_DEG 1200.0f
+#define SPEED_TO_DEG 600.0f
 
-#define MAX_ACCELERATION 0.1f
+#define MAX_ACCELERATION 0.2f
 // Note: MAX_MOTOR_SPEED is in fact the MINIMUM delay (in PRU ticks) between steps, so to increase the real max speed decrease this constant.
 /// TODO: Move this delay/PRU_CLOCK/etc logic into PRU driver and make this controller operate on rev/s.
 #define MAX_MOTOR_SPEED 300000.0f
@@ -22,6 +22,8 @@
 // A 'magic number' that makes the speed calculations right. Required probably because by a bug in PRU firmware.
 #define SPEED_MULTIPLIER 0.5f
 #define DEVICE_NAME "/dev/rpmsg_pru31"
+
+void clipValue(float & value, float max);
 
 class MotorsController {
 	private:
@@ -50,15 +52,16 @@ class MotorsController {
 
 		bool pidSpeedRegulatorEnabled;
 		float pidSpeedKp;
-		float pidSpeedKi;
-		float pidSpeedKd;
-		float pidSpeedIntegral;
-		float pidSpeedError;
+		float pidSpeedInvTi;
+		float pidSpeedTd;
+		float pidSpeedPreviousError1;
+		float pidSpeedPreviousError2;
 		float pidAngleKp;
-		float pidAngleKi;
-		float pidAngleKd;
-		float pidAngleIntegral;
-		float pidAngleError;
+		float pidAngleInvTi;
+		float pidAngleTd;
+		float pidAnglePreviousError1;
+		float pidAnglePreviousError2;
+		float pidPreviousTargetAngle;
 
 		float lqrLinearVelocityK;
 		float lqrAngularVelocityK;
@@ -88,14 +91,15 @@ class MotorsController {
 		void setSpeedFilterFactor(float factor);
 		void setAngleFilterFactor(float factor);
 		void setPIDSpeedRegulatorEnabled(bool enabled);
-		void setPIDParameters(float speedKp, float speedKi, float speedKd, float angleKp, float angleKi, float kangleK);
+		void setPIDParameters(float speedKp, float speedInvTi, float speedTd, float angleKp, float angleInvTi, float angleTd);
 		void setLQRParameters(float linearVelocityK, float angularVelocityK, float angleK);
-		void zeroRegulators();
+		void zeroPIDRegulator();
 		float getSpeedFilterFactor();
 		float getAngleFilterFactor();
 		bool getLQREnabled();
 		bool getPIDSpeedRegulatorEnabled();
-		void getPIDParameters(float & speedKp, float & speedKi, float & speedKd, float & angleKp, float & angleKi, float & angleKd);
+		void getPIDParameters(float & speedKp, float & speedInvTi, float & speedTd, float & angleKp, float & angleInvTi, float & angleTd);
+		void getPIDPreviousTargetAngle(float & angle);
 		void getLQRParameters(float & linearVelocityK, float & angularVelocityK, float & angleK);
 
 		void calculateSpeeds(float angle, float rotationX, float speed, float throttle, float rotation, float &speedLeftNew, float &speedRightNew, float loopTime);
